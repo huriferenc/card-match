@@ -1,5 +1,10 @@
 <div class="row align-items-center justify-content-center py-3">
-  <div *ngFor="let card of cards" class="col-2 game-card" (click)="selectCard(card)">
-    {{ card | json }}
-  </div>
+  <button
+    *ngFor="let card of cards$ | async"
+    class="col-2 game-card"
+    (click)="selectCard(card)"
+    [disabled]="card.selected || loading"
+  >
+    {{ card.selected ? card.value : card.id }}
+  </button>
 </div>

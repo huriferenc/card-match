@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { CardValues } from 'src/app/card-values';
-import { Card, StoreService } from 'src/app/store.service';
+
+import { StoreService } from 'src/app/store.service';
 
 @Component({
   selector: 'app-view',
@@ -9,15 +8,11 @@ import { Card, StoreService } from 'src/app/store.service';
   styleUrls: ['./view.component.scss']
 })
 export class ViewComponent implements OnInit {
-  cards$: BehaviorSubject<Card[]>;
-
-  constructor(private storeService: StoreService) {
-    this.cards$ = this.storeService.cards$;
-  }
+  constructor(private storeService: StoreService) {}
 
   ngOnInit(): void {}
 
   restart(): void {
-    this.storeService.generateCards();
+    this.storeService.newGame();
   }
 }

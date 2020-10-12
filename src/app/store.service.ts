@@ -16,7 +16,7 @@ export class StoreService {
   stepNumber$ = new BehaviorSubject(0);
   stepNumberChanged = this.stepNumber$.asObservable();
 
-  bestScore$ = new BehaviorSubject(0);
+  bestScore$ = new BehaviorSubject(100);
   bestScoreChanged = this.bestScore$.asObservable();
 
   cardNumber$ = new BehaviorSubject(6);
@@ -44,7 +44,6 @@ export class StoreService {
       if (!this.isFirstLoad && typeof value === 'number' && !Number.isNaN(value)) {
         LocalStorage.setItem('cardNumber', value);
         console.log('cardNumber changed', value);
-        this.generateCards();
       }
     });
     this.cardsChanged.subscribe((value: Card[]) => {
@@ -73,10 +72,19 @@ export class StoreService {
     if (cards && Array.isArray(cards) && cards.length === cardNumber) {
       this.cards$.next(cards);
     } else {
-      this.generateCards();
+      this.newGame();
     }
 
     this.isFirstLoad = false;
+  }
+
+  newGame(): void {
+    this.resetSteps();
+    this.generateCards();
+  }
+
+  private resetSteps(): void {
+    this.stepNumber$.next(0);
   }
 
   private randomNumber(min, max) {
@@ -93,7 +101,7 @@ export class StoreService {
     return randNums;
   }
 
-  generateCards() {
+  generateCards(): void {
     const cardNumber = this.cardNumber$.getValue();
 
     const cardValues = CardValues.map((value) => ({ count: 2, value }));
@@ -107,7 +115,7 @@ export class StoreService {
       }
 
       cards[cardIndexes[i]] = {
-        id: cardIndexes[i],
+        id: cardIndexes[i] + 1,
         value: cardValues[ind].value,
         selected: false
       };

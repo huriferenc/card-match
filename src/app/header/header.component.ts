@@ -43,5 +43,6 @@ export class HeaderComponent implements OnInit {
 
   startNewGame() {
     this.cardNumber$.next(this.selectedNumber);
+    this.storeService.newGame();
   }
 }
