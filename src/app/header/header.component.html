@@ -1,0 +1,18 @@
+<div class="row align-items-center">
+  <div class="col-auto">
+    <a [routerLink]="''">Splendex</a>
+  </div>
+  <div class="col text-center">
+    <div>
+      <span>Deck size:</span>
+      <select [ngModel]="selectedNumber" (ngModelChange)="changeCardNumber($event)">
+        <option *ngFor="let num of numbers" [value]="num">
+          {{ num }}
+        </option>
+      </select>
+    </div>
+    <div>
+      <button class="btn btn-danger" (click)="startNewGame()">START NEW GAME</button>
+    </div>
+  </div>
+</div>

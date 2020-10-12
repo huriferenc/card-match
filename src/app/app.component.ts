@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { StoreService } from './store.service';
 
 @Component({
   selector: 'app-root',
@@ -6,5 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'card-match';
+  constructor(private storeService: StoreService) {
+    this.storeService.checkStoreData();
+  }
 }
