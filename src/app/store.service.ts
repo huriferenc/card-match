@@ -31,25 +31,25 @@ export class StoreService {
     this.stepNumberChanged.subscribe((value: number) => {
       if (!this.isFirstLoad && typeof value === 'number' && !Number.isNaN(value)) {
         LocalStorage.setItem('stepNumber', value);
-        console.log('stepNumber changed', value);
+        // console.log('stepNumber changed', value);
       }
     });
     this.bestScoreChanged.subscribe((value: number) => {
       if (!this.isFirstLoad && typeof value === 'number' && !Number.isNaN(value)) {
         LocalStorage.setItem('bestScore', value);
-        console.log('bestScore changed', value);
+        // console.log('bestScore changed', value);
       }
     });
     this.cardNumberChanged.subscribe((value: number) => {
       if (!this.isFirstLoad && typeof value === 'number' && !Number.isNaN(value)) {
         LocalStorage.setItem('cardNumber', value);
-        console.log('cardNumber changed', value);
+        // console.log('cardNumber changed', value);
       }
     });
     this.cardsChanged.subscribe((value: Card[]) => {
       if (!this.isFirstLoad && value && Array.isArray(value)) {
         LocalStorage.setItem('cards', value);
-        console.log('cards changed', value);
+        // console.log('cards changed', value);
       }
     });
   }

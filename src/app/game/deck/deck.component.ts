@@ -44,9 +44,6 @@ export class DeckComponent implements OnInit {
   selectCard(card: Card): void {
     this.selectedCard = card;
 
-    console.log(this.selectedCard);
-    console.log(this.previousSelectedCard);
-
     const cards = this.cards$.getValue();
     const cardIndex = cards.findIndex((item) => item.id === this.selectedCard.id);
     cards[cardIndex].selected = true;
