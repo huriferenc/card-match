@@ -104,23 +104,22 @@ export class StoreService {
   generateCards(): void {
     const cardNumber = this.cardNumber$.getValue();
 
-    const cardValues = CardValues.map((value) => ({ count: 2, value }));
+    const cardValuesIndexes = this.generateRandomNumbers(cardNumber / 2, 0, CardValues.length - 1);
+
     const cardIndexes = this.generateRandomNumbers(cardNumber, 0, cardNumber - 1);
 
     let ind: number = 0;
     const cards: Card[] = new Array(cardNumber);
     for (let i = 0; i < cardIndexes.length; i++) {
-      if (cardValues[ind].count === 0) {
+      if (i > 0 && i % 2 === 0) {
         ind++;
       }
 
       cards[cardIndexes[i]] = {
         id: cardIndexes[i] + 1,
-        value: cardValues[ind].value,
+        value: CardValues[cardValuesIndexes[ind]],
         selected: false
       };
-
-      cardValues[ind].count--;
     }
 
     this.cards$.next(cards);
