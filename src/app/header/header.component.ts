@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 
 import { StoreService } from '../store.service';
@@ -13,7 +14,7 @@ export class HeaderComponent implements OnInit {
 
   selectedNumber: number;
 
-  constructor(private storeService: StoreService) {
+  constructor(private storeService: StoreService, private router: Router) {
     this.cardNumber$ = this.storeService.cardNumber$;
     this.selectedNumber = this.cardNumber$.getValue();
   }
@@ -44,5 +45,7 @@ export class HeaderComponent implements OnInit {
   startNewGame() {
     this.cardNumber$.next(this.selectedNumber);
     this.storeService.newGame();
+
+    this.router.navigateByUrl('/');
   }
 }
