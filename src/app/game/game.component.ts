@@ -1,17 +1,16 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-
-import { Card, StoreService } from 'src/app/store.service';
+import { Card, StoreService } from '../store.service';
 
 @Component({
-  selector: 'app-deck',
-  templateUrl: './deck.component.html',
-  styleUrls: ['./deck.component.scss']
+  selector: 'app-game',
+  templateUrl: './game.component.html',
+  styleUrls: ['./game.component.scss']
 })
-export class DeckComponent implements OnInit {
-  cards$: BehaviorSubject<Card[]>;
+export class GameComponent implements OnInit {
   stepNumber$: BehaviorSubject<number>;
   bestScore$: BehaviorSubject<number>;
+  cards$: BehaviorSubject<Card[]>;
 
   private selectedCard: Card;
   private previousSelectedCard: Card;
@@ -20,10 +19,17 @@ export class DeckComponent implements OnInit {
 
   loading = false;
 
+  /**
+   * @TODO
+   *
+   * DELETE
+   */
+  stepNumber: number;
+
   constructor(private storeService: StoreService) {
-    this.cards$ = this.storeService.cards$;
     this.stepNumber$ = this.storeService.stepNumber$;
     this.bestScore$ = this.storeService.bestScore$;
+    this.cards$ = this.storeService.cards$;
 
     const cards = this.cards$.getValue();
     const selectedCards = cards.filter((item) => item.selected);
@@ -37,9 +43,21 @@ export class DeckComponent implements OnInit {
 
       this.checkSelectedCards();
     }
+
+    this.stepNumber = this.stepNumber$.getValue();
   }
 
   ngOnInit(): void {}
+
+  restart(): void {
+    console.log(this.stepNumber);
+    /**
+     * @FIXME
+     *
+     * Dont reset previously selected card (selectedCard)
+     */
+    this.storeService.restartCurrentGame();
+  }
 
   selectCard(card: Card): void {
     this.selectedCard = card;

@@ -83,8 +83,27 @@ export class StoreService {
     this.generateCards();
   }
 
+  restartCurrentGame(): void {
+    this.resetSteps();
+    this.resetSelectedCards();
+  }
+
   private resetSteps(): void {
     this.stepNumber$.next(0);
+  }
+
+  private resetSelectedCards(): void {
+    const cards = this.cards$.getValue();
+
+    const newCards = cards.map((item) => {
+      if (item.selected) {
+        item.selected = false;
+      }
+
+      return item;
+    });
+
+    this.cards$.next(newCards);
   }
 
   private randomNumber(min, max) {
