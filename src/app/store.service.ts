@@ -27,6 +27,34 @@ export class StoreService {
 
   isFirstLoad = true;
 
+  get stepNumber() {
+    return this.stepNumber$.getValue();
+  }
+  set stepNumber(val: number) {
+    this.stepNumber$.next(val);
+  }
+
+  get bestScore() {
+    return this.bestScore$.getValue();
+  }
+  set bestScore(val: number) {
+    this.bestScore$.next(val);
+  }
+
+  get cardNumber() {
+    return this.cardNumber$.getValue();
+  }
+  set cardNumber(val: number) {
+    this.cardNumber$.next(val);
+  }
+
+  get cards() {
+    return this.cards$.getValue();
+  }
+  set cards(val: Card[]) {
+    this.cards$.next(val);
+  }
+
   constructor() {
     this.stepNumberChanged.subscribe((value: number) => {
       if (!this.isFirstLoad && typeof value === 'number' && !Number.isNaN(value)) {
@@ -61,16 +89,16 @@ export class StoreService {
     const cards: Card[] = LocalStorage.getItem('cards');
 
     if (typeof stepNumber === 'number' && !Number.isNaN(stepNumber)) {
-      this.stepNumber$.next(stepNumber);
+      this.stepNumber = stepNumber;
     }
     if (typeof bestScore === 'number' && !Number.isNaN(bestScore)) {
-      this.bestScore$.next(bestScore);
+      this.bestScore = bestScore;
     }
     if (typeof cardNumber === 'number' && !Number.isNaN(cardNumber)) {
-      this.cardNumber$.next(cardNumber);
+      this.cardNumber = cardNumber;
     }
-    if (cards && Array.isArray(cards) && cards.length === cardNumber) {
-      this.cards$.next(cards);
+    if (cards && Array.isArray(cards) && cards.length > 0) {
+      this.cards = cards;
     } else {
       this.newGame();
     }
@@ -89,11 +117,11 @@ export class StoreService {
   }
 
   private resetSteps(): void {
-    this.stepNumber$.next(0);
+    this.stepNumber = 0;
   }
 
   private resetSelectedCards(): void {
-    const cards = this.cards$.getValue();
+    const cards = this.cards;
 
     const newCards = cards.map((item) => {
       if (item.selected) {
@@ -103,7 +131,7 @@ export class StoreService {
       return item;
     });
 
-    this.cards$.next(newCards);
+    this.cards = newCards;
   }
 
   private randomNumber(min, max) {
@@ -121,14 +149,16 @@ export class StoreService {
   }
 
   generateCards(): void {
-    const cardNumber = this.cardNumber$.getValue();
+    const cardValuesIndexes = this.generateRandomNumbers(
+      this.cardNumber / 2,
+      0,
+      CardValues.length - 1
+    );
 
-    const cardValuesIndexes = this.generateRandomNumbers(cardNumber / 2, 0, CardValues.length - 1);
-
-    const cardIndexes = this.generateRandomNumbers(cardNumber, 0, cardNumber - 1);
+    const cardIndexes = this.generateRandomNumbers(this.cardNumber, 0, this.cardNumber - 1);
 
     let ind: number = 0;
-    const cards: Card[] = new Array(cardNumber);
+    const cards: Card[] = new Array(this.cardNumber);
     for (let i = 0; i < cardIndexes.length; i++) {
       if (i > 0 && i % 2 === 0) {
         ind++;
@@ -141,6 +171,6 @@ export class StoreService {
       };
     }
 
-    this.cards$.next(cards);
+    this.cards = cards;
   }
 }
