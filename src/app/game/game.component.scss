@@ -1,4 +1,19 @@
 .game-card {
   height: 80px;
   border: 1px solid #ccc;
+
+  &:disabled {
+    background-color: #efefef;
+  }
+
+  img {
+    display: none;
+  }
+
+  &.selected {
+    img {
+      display: block;
+      width: 100%;
+    }
+  }
 }
