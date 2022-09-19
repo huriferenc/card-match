@@ -114,25 +114,20 @@ export class StoreService {
 
   restartCurrentGame(): void {
     this.resetSteps();
-    this.resetSelectedCards();
+    this.resetSelectedAndMatchedCards();
   }
 
   private resetSteps(): void {
     this.stepNumber = 0;
   }
 
-  private resetSelectedCards(): void {
-    const cards = this.cards;
-
-    const newCards = cards.map((item) => {
-      if (item.selected) {
-        item.selected = false;
-      }
+  private resetSelectedAndMatchedCards(): void {
+    this.cards = this.cards.map((item) => {
+      item.selected = false;
+      item.matched = false;
 
       return item;
     });
-
-    this.cards = newCards;
   }
 
   private randomNumber(min, max) {
