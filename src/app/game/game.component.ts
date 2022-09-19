@@ -35,7 +35,10 @@ export class GameComponent implements OnInit {
   }
 
   getRowAndColumnNumber(cardNumber: number) {
-    return Math.floor(Math.sqrt(cardNumber));
+    if (cardNumber == 8) {
+      return 4;
+    }
+    return Math.ceil(Math.sqrt(cardNumber));
   }
 
   restart(): void {
@@ -73,7 +76,15 @@ export class GameComponent implements OnInit {
       if (this.selectedCards[0].value === this.selectedCards[1].value) {
         console.log('Cards are matching!');
 
-        const nonMatchedCards = this.storeService.cards.filter((item) => !item.selected);
+        this.storeService.cards = this.storeService.cards.map((item) => {
+          if (item.id === this.selectedCards[0].id || item.id === this.selectedCards[1].id) {
+            item.matched = true;
+          }
+
+          return item;
+        });
+
+        const nonMatchedCards = this.storeService.cards.filter((item) => !item.matched);
 
         if (nonMatchedCards.length === 0) {
           this.checkBestScore();
@@ -81,15 +92,15 @@ export class GameComponent implements OnInit {
         }
       } else {
         console.log('No matching!');
-
-        this.storeService.cards = this.storeService.cards.map((item) => {
-          if (item.selected) {
-            item.selected = false;
-          }
-
-          return item;
-        });
       }
+
+      this.storeService.cards = this.storeService.cards.map((item) => {
+        if (item.id === this.selectedCards[0].id || item.id === this.selectedCards[1].id) {
+          item.selected = false;
+        }
+
+        return item;
+      });
 
       this.isSelecting = false;
     }, 1000);

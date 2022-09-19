@@ -7,6 +7,7 @@ export interface Card {
   id: number;
   value: string;
   selected: boolean;
+  matched: boolean;
 }
 
 @Injectable({
@@ -167,7 +168,8 @@ export class StoreService {
       cards[cardIndexes[i]] = {
         id: cardIndexes[i] + 1,
         value: CardValues[cardValuesIndexes[ind]],
-        selected: false
+        selected: false,
+        matched: false
       };
     }
 

@@ -26,15 +26,20 @@
       'repeat(' + getRowAndColumnNumber(cardNumber$ | async) + ', 1fr)'
     "
   >
-    <div
-      *ngFor="let card of cards$ | async"
-      class="game-card"
-      [ngClass]="{ selected: card.selected }"
-      (click)="!card.selected && !isSelecting && selectCard(card)"
-    >
-      <img class="front" [src]="'./assets/img/' + card.value + '.png'" />
-      <img class="back" src="./assets/img/default.png" />
-    </div>
+    <ng-container *ngFor="let card of cards$ | async">
+      <div *ngIf="card.matched" class="game-card matched">
+        <img class="back" [src]="'./assets/img/' + card.value + '.png'" />
+      </div>
+      <div
+        *ngIf="!card.matched"
+        class="game-card"
+        [ngClass]="{ selected: card.selected }"
+        (click)="!card.selected && !isSelecting && selectCard(card)"
+      >
+        <img class="front" [src]="'./assets/img/' + card.value + '.png'" />
+        <img class="back" src="./assets/img/default.png" />
+      </div>
+    </ng-container>
   </div>
 </div>
 <!-- -->
