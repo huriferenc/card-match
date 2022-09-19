@@ -1,0 +1,25 @@
+#rotate-error {
+  display: none;
+}
+
+@media only screen and (max-width: 767px) {
+  /* WRONG ORIENTATION */
+  @media only screen and (orientation: landscape) {
+    #rotate-error {
+      display: block;
+    }
+    .container {
+      display: none;
+    }
+  }
+
+  /* CORRECT ORIENTATION */
+  @media only screen and (orientation: portrait) {
+    #rotate-error {
+      display: none;
+    }
+    .container {
+      display: block;
+    }
+  }
+}
