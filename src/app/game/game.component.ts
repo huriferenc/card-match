@@ -35,9 +35,6 @@ export class GameComponent implements OnInit {
   }
 
   getRowAndColumnNumber(cardNumber: number) {
-    if (cardNumber == 8) {
-      return 4;
-    }
     return Math.ceil(Math.sqrt(cardNumber));
   }
 

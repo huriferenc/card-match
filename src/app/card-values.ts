@@ -10,4 +10,4 @@ export const CardValues = [
   'webpack'
 ];
 
-export const CardNumberValues = [4, 6, 8, 16];
+export const CardNumberValues = [4, 6, 9, 16];
