@@ -6,7 +6,8 @@ export const CardValues = [
   'react',
   'redux',
   'sass',
-  'splendex',
   'ts',
   'webpack'
 ];
+
+export const CardNumberValues = [4, 9, 16];

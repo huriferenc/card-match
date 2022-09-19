@@ -1,19 +1,108 @@
-.game-card {
-  height: 80px;
-  border: 1px solid #ccc;
+.game-container {
+  display: grid;
+  width: 100vw;
+  height: 100vw;
+  grid-gap: 5px;
 
-  &:disabled {
-    background-color: #efefef;
+  @media only screen and (min-width: 768px) {
+    width: auto;
+    height: auto;
   }
 
-  img {
-    display: none;
-  }
+  .game-card {
+    position: relative;
+    transform: scale(1);
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+    box-shadow: 1px 1px 1px rgb(0 0 0 / 30%);
+    border-radius: 6px;
 
-  &.selected {
-    img {
-      display: block;
+    @media only screen and (min-width: 768px) {
+      width: 170px;
+      height: 170px;
+    }
+
+    &:active {
+      transform: scale(0.97);
+      transition: transform 0.2s;
+    }
+
+    &.selected {
+      transform: rotateY(180deg);
+    }
+
+    .front,
+    .back {
+      position: absolute;
       width: 100%;
+      height: 100%;
+      padding: 9px;
+      border-radius: 5px;
+      background: #1c7ccc;
+      backface-visibility: hidden;
+    }
+
+    .front {
+      transform: rotateY(180deg);
     }
   }
+  /*
+  width: 640px;
+  height: 640px;
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-content: flex-start;
+
+  @media only screen and (max-width: 640px) {
+    width: 100vw;
+  }
+
+  .game-card {
+    width: calc(33% - 10px);
+    height: calc(36% - 10px);
+    margin: 5px;
+    position: relative;
+    transform: scale(1);
+    transform-style: preserve-3d;
+    transition: transform 0.5s;
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+    border-radius: 6px;
+
+    @media only screen and (max-width: 640px) {
+      width: calc(25% - 4px);
+      height: calc(16% - 4px);
+      margin: 2px;
+    }
+
+    &:active {
+      transform: scale(0.97);
+      transition: transform 0.2s;
+    }
+
+    &.selected {
+      transform: rotateY(180deg);
+    }
+
+    .front,
+    .back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      padding: 20px;
+      border-radius: 5px;
+      background: #1c7ccc;
+      backface-visibility: hidden;
+
+      @media only screen and (max-width: 640px) {
+        padding: 9px;
+      }
+    }
+
+    .front {
+      transform: rotateY(180deg);
+    }
+  }
+  */
 }

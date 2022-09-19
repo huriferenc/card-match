@@ -1,18 +1,18 @@
-<div class="row align-items-center">
-  <div class="col text-center">
+<div class="row py-2 align-items-center">
+  <div class="col">
+    <div>Deck size:</div>
     <div>
-      <span>Deck size:</span>
       <select [ngModel]="selectedNumber" (ngModelChange)="changeCardNumber($event)">
         <option *ngFor="let num of numbers" [value]="num">
           {{ num }}
         </option>
       </select>
     </div>
-    <div>
-      <button class="btn btn-danger" (click)="startNewGame()">START NEW GAME</button>
-    </div>
   </div>
-  <div class="col-auto">
+  <div>
+    <button class="btn btn-danger" (click)="startNewGame()">NEW GAME</button>
+  </div>
+  <div class="col text-right">
     <a [routerLink]="'/rules'">Rules</a>
   </div>
 </div>

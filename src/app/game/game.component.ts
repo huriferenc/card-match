@@ -11,17 +11,21 @@ export class GameComponent implements OnInit {
   stepNumber$: BehaviorSubject<number>;
   bestScore$: BehaviorSubject<number>;
   cards$: BehaviorSubject<Card[]>;
+  cardNumber$: BehaviorSubject<number>;
 
   selectedCards: Card[];
 
   private timeout: any;
 
-  loading = false;
+  isSelecting = false;
 
-  constructor(private storeService: StoreService) {
+  constructor(private storeService: StoreService) {}
+
+  ngOnInit(): void {
     this.stepNumber$ = this.storeService.stepNumber$;
     this.bestScore$ = this.storeService.bestScore$;
     this.cards$ = this.storeService.cards$;
+    this.cardNumber$ = this.storeService.cardNumber$;
 
     this.selectedCards = this.storeService.cards.filter((item) => item.selected);
 
@@ -30,7 +34,9 @@ export class GameComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {}
+  getRowAndColumnNumber(cardNumber: number) {
+    return Math.floor(Math.sqrt(cardNumber));
+  }
 
   restart(): void {
     this.storeService.restartCurrentGame();
@@ -61,15 +67,15 @@ export class GameComponent implements OnInit {
   }
 
   private checkSelectedCards(): void {
-    this.loading = true;
+    this.isSelecting = true;
     clearTimeout(this.timeout);
     this.timeout = setTimeout(() => {
       if (this.selectedCards[0].value === this.selectedCards[1].value) {
         console.log('Cards are matching!');
 
-        this.storeService.cards = this.storeService.cards.filter((item) => !item.selected);
+        const nonMatchedCards = this.storeService.cards.filter((item) => !item.selected);
 
-        if (this.storeService.cards.length === 0) {
+        if (nonMatchedCards.length === 0) {
           this.checkBestScore();
           this.storeService.newGame();
         }
@@ -85,7 +91,7 @@ export class GameComponent implements OnInit {
         });
       }
 
-      this.loading = false;
+      this.isSelecting = false;
     }, 1000);
   }
 

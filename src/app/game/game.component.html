@@ -1,37 +1,40 @@
-<div class="row px-2">
-  <div class="col-12">
-    <div class="row align-items-center justify-content-center py-3">
+<div class="row py-3 align-items-center justify-content-center">
+  <div class="col">
+    <!-- Statistics -->
+    <div class="row">
+      <div class="col">Current tries: {{ stepNumber$ | async }}</div>
       <div class="col">
-        <!-- Statistics -->
         <div class="row">
-          <div class="col">Current tries: {{ stepNumber$ | async }}</div>
-          <div class="col">
-            <div class="row">
-              <div class="col-12">Best:</div>
-              <div class="col-12">
-                {{ bestScore$ | async }}
-              </div>
-            </div>
+          <div class="col-12">Best:</div>
+          <div class="col-12">
+            {{ bestScore$ | async }}
           </div>
         </div>
-        <!-- -->
       </div>
-      <div class="col-auto">
-        <button class="btn btn-outline-dark" (click)="restart()">RESTART</button>
-      </div>
-    </div>
-    <!-- Deck -->
-    <div class="row align-items-center justify-content-center py-3 no-gutters">
-      <button
-        *ngFor="let card of cards$ | async"
-        class="col-2 game-card"
-        [ngClass]="{ selected: card.selected }"
-        (click)="selectCard(card)"
-        [disabled]="card.selected || loading"
-      >
-        <img [src]="'./assets/img/' + card.value + '.png'" />
-      </button>
     </div>
     <!-- -->
   </div>
+  <div class="col-auto">
+    <button class="btn btn-outline-dark" (click)="restart()">RESTART</button>
+  </div>
 </div>
+<!-- Deck -->
+<div class="row py-3 align-items-center justify-content-center no-gutters">
+  <div
+    class="game-container"
+    [style.grid-template-columns]="
+      'repeat(' + getRowAndColumnNumber(cardNumber$ | async) + ', 1fr)'
+    "
+  >
+    <div
+      *ngFor="let card of cards$ | async"
+      class="game-card"
+      [ngClass]="{ selected: card.selected }"
+      (click)="!card.selected && !isSelecting && selectCard(card)"
+    >
+      <img class="front" [src]="'./assets/img/' + card.value + '.png'" />
+      <img class="back" src="./assets/img/default.png" />
+    </div>
+  </div>
+</div>
+<!-- -->

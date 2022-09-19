@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { CardValues } from './card-values';
+import { CardNumberValues, CardValues } from './card-values';
 import { LocalStorage } from './local-storage';
 
 export interface Card {
@@ -19,7 +19,7 @@ export class StoreService {
   bestScore$ = new BehaviorSubject(100);
   bestScoreChanged = this.bestScore$.asObservable();
 
-  cardNumber$ = new BehaviorSubject(6);
+  cardNumber$ = new BehaviorSubject(CardNumberValues[0]);
   cardNumberChanged = this.cardNumber$.asObservable();
 
   cards$: BehaviorSubject<Card[]> = new BehaviorSubject([]);
