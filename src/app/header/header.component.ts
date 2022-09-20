@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { CardNumberValues } from '../card-values';
+import { CardNumberValues } from '../card.model';
 
 import { StoreService } from '../store.service';
 

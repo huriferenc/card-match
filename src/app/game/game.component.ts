@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { Card, StoreService } from '../store.service';
+import { Card } from '../card.model';
+import { StoreService } from '../store.service';
 
 @Component({
   selector: 'app-game',
@@ -105,7 +106,7 @@ export class GameComponent implements OnInit {
 
   private checkBestScore(): void {
     if (this.storeService.stepNumber < this.storeService.bestScore) {
-      this.storeService.bestScore = this.storeService.stepNumber;
+      this.storeService.saveNewBestScore(this.storeService.stepNumber);
     }
   }
 }

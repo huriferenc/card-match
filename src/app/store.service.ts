@@ -1,14 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { CardNumberValues, CardValues } from './card-values';
+import { BestScore, Card, CardNumberValues, CardValues, MAX_BEST_SCORE } from './card.model';
 import { LocalStorage } from './local-storage';
-
-export interface Card {
-  id: number;
-  value: string;
-  selected: boolean;
-  matched: boolean;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +10,7 @@ export class StoreService {
   stepNumber$ = new BehaviorSubject(0);
   stepNumberChanged = this.stepNumber$.asObservable();
 
-  bestScore$ = new BehaviorSubject(100);
-  bestScoreChanged = this.bestScore$.asObservable();
+  bestScore$ = new BehaviorSubject(MAX_BEST_SCORE);
 
   cardNumber$ = new BehaviorSubject(CardNumberValues[0]);
   cardNumberChanged = this.cardNumber$.asObservable();
@@ -39,7 +31,11 @@ export class StoreService {
     return this.bestScore$.getValue();
   }
   set bestScore(val: number) {
-    this.bestScore$.next(val);
+    if (Number.isSafeInteger(val)) {
+      this.bestScore$.next(val);
+    } else {
+      this.bestScore$.next(MAX_BEST_SCORE);
+    }
   }
 
   get cardNumber() {
@@ -56,47 +52,45 @@ export class StoreService {
     this.cards$.next(val);
   }
 
+  private bestScores: BestScore[] = [];
+
   constructor() {
     this.stepNumberChanged.subscribe((value: number) => {
-      if (!this.isFirstLoad && typeof value === 'number' && !Number.isNaN(value)) {
+      if (!this.isFirstLoad && Number.isSafeInteger(value)) {
         LocalStorage.setItem('stepNumber', value);
-        // console.log('stepNumber changed', value);
-      }
-    });
-    this.bestScoreChanged.subscribe((value: number) => {
-      if (!this.isFirstLoad && typeof value === 'number' && !Number.isNaN(value)) {
-        LocalStorage.setItem('bestScore', value);
-        // console.log('bestScore changed', value);
       }
     });
     this.cardNumberChanged.subscribe((value: number) => {
-      if (!this.isFirstLoad && typeof value === 'number' && !Number.isNaN(value)) {
+      if (!this.isFirstLoad && Number.isSafeInteger(value)) {
         LocalStorage.setItem('cardNumber', value);
-        // console.log('cardNumber changed', value);
       }
     });
     this.cardsChanged.subscribe((value: Card[]) => {
       if (!this.isFirstLoad && value && Array.isArray(value)) {
         LocalStorage.setItem('cards', value);
-        // console.log('cards changed', value);
       }
     });
   }
 
   checkStoreData() {
-    const stepNumber: number = LocalStorage.getItem('stepNumber');
-    const bestScore: number = LocalStorage.getItem('bestScore');
     const cardNumber: number = LocalStorage.getItem('cardNumber');
+    const bestScores: BestScore[] = LocalStorage.getItem('bestScores');
+    const stepNumber: number = LocalStorage.getItem('stepNumber');
     const cards: Card[] = LocalStorage.getItem('cards');
 
-    if (typeof stepNumber === 'number' && !Number.isNaN(stepNumber)) {
-      this.stepNumber = stepNumber;
-    }
-    if (typeof bestScore === 'number' && !Number.isNaN(bestScore)) {
-      this.bestScore = bestScore;
-    }
-    if (typeof cardNumber === 'number' && !Number.isNaN(cardNumber)) {
+    if (Number.isSafeInteger(cardNumber)) {
       this.cardNumber = cardNumber;
+
+      if (Array.isArray(bestScores) && bestScores.length > 0) {
+        this.bestScores = [...bestScores];
+
+        this.bestScore = this.bestScores.find(
+          (item) => item.cardNumber === this.cardNumber
+        )?.bestScore;
+      }
+    }
+    if (Number.isSafeInteger(stepNumber)) {
+      this.stepNumber = stepNumber;
     }
     if (cards && Array.isArray(cards) && cards.length > 0) {
       this.cards = cards;
@@ -109,6 +103,7 @@ export class StoreService {
 
   newGame(): void {
     this.resetSteps();
+    this.resetBestScore();
     this.generateCards();
   }
 
@@ -119,6 +114,10 @@ export class StoreService {
 
   private resetSteps(): void {
     this.stepNumber = 0;
+  }
+
+  private resetBestScore(): void {
+    this.bestScore = this.bestScores.find((item) => item.cardNumber === this.cardNumber)?.bestScore;
   }
 
   private resetSelectedAndMatchedCards(): void {
@@ -169,5 +168,22 @@ export class StoreService {
     }
 
     this.cards = cards;
+  }
+
+  saveNewBestScore(value: number) {
+    const existingBestScoreIndex = this.bestScores.findIndex(
+      (item) => item.cardNumber === this.cardNumber
+    );
+
+    if (existingBestScoreIndex === -1) {
+      this.bestScores.push({
+        cardNumber: this.cardNumber,
+        bestScore: value
+      });
+    } else {
+      this.bestScores[existingBestScoreIndex].bestScore = value;
+    }
+
+    LocalStorage.setItem('bestScores', this.bestScores);
   }
 }
